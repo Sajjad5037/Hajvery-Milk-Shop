@@ -7,22 +7,20 @@ import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import ShopOnline from "./pages/ShopOnline";
+import OrderOnline from "./pages/OrderOnline";
 
 function App() {
-  
   return (
     <Router>
-      {/* Navbar with white background */}
-     
+      {/* Navbar */}
+      <Navbar />
 
       {/* Main content area */}
       <div className="bg-gray-50 min-h-screen">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/ShopOnline" element={<ShopOnline />} />
-  
+          <Route path="/order-online" element={<OrderOnline />} />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
