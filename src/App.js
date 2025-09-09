@@ -1,19 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import Products from "./pages/Products";
-
-
-
 import OrderOnline from "./pages/OrderOnline";
 
 function App() {
   return (
-    <Router>
-      {/* Navbar */}
-      <Navbar />
+    
 
       {/* Main content area */}
       <div className="bg-gray-50 min-h-screen">
