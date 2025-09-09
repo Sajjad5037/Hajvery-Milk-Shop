@@ -115,21 +115,41 @@ const ShopOnline = () => {
   const [clickedItemId, setClickedItemId] = useState(null);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        // Replace this API URL with your milk products API
-        const res = await fetch("https://usefulapis-production.up.railway.app/api/get-milk-products");
-        const data = await res.json();
-        setProducts(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      // Fetch dairy products from your API
+      const res = await fetch("https://usefulapis-production.up.railway.app/api/get-milk-products");
+      const data = await res.json();
+
+      // Example fallback if API fails or you want local sample products
+      const sampleData = [
+        { id: 1, name: "Full Cream Milk 1L", price: 180, description: "Fresh full cream milk", image_url: "/images/full-cream-milk.jpg", category: "Milk" },
+        { id: 2, name: "Skimmed Milk 1L", price: 200, description: "Low-fat milk", image_url: "/images/skimmed-milk.jpg", category: "Milk" },
+        { id: 3, name: "Paneer 200g", price: 250, description: "Fresh homemade paneer", image_url: "/images/paneer.jpg", category: "Paneer" },
+        { id: 4, name: "Butter 250g", price: 300, description: "Creamy unsalted butter", image_url: "/images/butter.jpg", category: "Butter" },
+        { id: 5, name: "Yogurt 500g", price: 120, description: "Fresh natural yogurt", image_url: "/images/yogurt.jpg", category: "Yogurt" },
+      ];
+
+      // Use API data if available, otherwise fallback to sample
+      setProducts(data.length ? data : sampleData);
+    } catch (err) {
+      console.error(err);
+      // Fallback to local data in case of error
+      setProducts([
+        { id: 1, name: "Full Cream Milk 1L", price: 180, description: "Fresh full cream milk", image_url: "/images/full-cream-milk.jpg", category: "Milk" },
+        { id: 2, name: "Skimmed Milk 1L", price: 200, description: "Low-fat milk", image_url: "/images/skimmed-milk.jpg", category: "Milk" },
+        { id: 3, name: "Paneer 200g", price: 250, description: "Fresh homemade paneer", image_url: "/images/paneer.jpg", category: "Paneer" },
+        { id: 4, name: "Butter 250g", price: 300, description: "Creamy unsalted butter", image_url: "/images/butter.jpg", category: "Butter" },
+        { id: 5, name: "Yogurt 500g", price: 120, description: "Fresh natural yogurt", image_url: "/images/yogurt.jpg", category: "Yogurt" },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   const handleAddToCart = (item) => {
     setCart((prev) => {
