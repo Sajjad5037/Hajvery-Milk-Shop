@@ -6,8 +6,7 @@ import OrderOnline from "./pages/OrderOnline";
 
 function App() {
   return (
-    
-
+    <Router>
       {/* Main content area */}
       <div className="bg-gray-50 min-h-screen">
         <Routes>
