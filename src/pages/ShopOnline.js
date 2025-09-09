@@ -186,7 +186,7 @@ const ShopOnline = () => {
 
     try {
       const payload = { items: cart, total, phone, timestamp: new Date().toISOString() };
-      const res = await fetch("https://usefulapis-production.up.railway.app/api/send-milk-order", {
+      const res = await fetch("https://usefulapis-production.up.railway.app/api/send-dry-fruit-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
