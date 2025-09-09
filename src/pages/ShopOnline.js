@@ -20,9 +20,7 @@ const styles = {
     paddingBottom: "0.5rem",
     marginTop: "2rem",
   },
-  menuGroup: {
-    marginBottom: "2rem",
-  },
+  menuGroup: { marginBottom: "2rem" },
   menuItemsWrapper: {
     display: "flex",
     flexWrap: "wrap",
@@ -38,9 +36,7 @@ const styles = {
     textAlign: "center",
     transition: "transform 0.2s",
   },
-  menuCardHover: {
-    transform: "scale(1.02)",
-  },
+  menuCardHover: { transform: "scale(1.02)" },
   menuImage: {
     width: "100%",
     height: "180px",
@@ -66,11 +62,7 @@ const styles = {
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
     padding: "1.5rem",
   },
-  cartList: {
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-  },
+  cartList: { listStyle: "none", padding: 0, margin: 0 },
   cartItem: {
     display: "flex",
     justifyContent: "space-between",
@@ -126,97 +118,9 @@ const ShopOnline = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        // Replace with your actual API or local data
-        const data = [
-          // Nuts
-          {
-            id: 1,
-            name: "Almonds",
-            price: 1200,
-            description: "Fresh and crunchy almonds",
-            image_url: "/images/almonds.jpg",
-            category: "Nuts",
-          },
-          {
-            id: 2,
-            name: "Cashews",
-            price: 1500,
-            description: "Premium cashews",
-            image_url: "/images/cashews.jpg",
-            category: "Nuts",
-          },
-          {
-            id: 3,
-            name: "Walnuts",
-            price: 1600,
-            description: "Healthy walnuts",
-            image_url: "/images/walnuts.jpg",
-            category: "Nuts",
-          },
-        
-          // Seeds
-          {
-            id: 4,
-            name: "Pumpkin Seeds",
-            price: 500,
-            description: "Crunchy and nutritious pumpkin seeds",
-            image_url: "/images/pumpkin-seeds.jpg",
-            category: "Seeds",
-          },
-          {
-            id: 5,
-            name: "Sunflower Seeds",
-            price: 400,
-            description: "High-quality sunflower seeds",
-            image_url: "/images/sunflower-seeds.jpg",
-            category: "Seeds",
-          },
-        
-          // Dried Fruits
-          {
-            id: 6,
-            name: "Raisins",
-            price: 300,
-            description: "Sweet and juicy raisins",
-            image_url: "/images/raisins.jpg",
-            category: "Dried Fruits",
-          },
-          {
-            id: 7,
-            name: "Dates",
-            price: 600,
-            description: "Soft and natural dates",
-            image_url: "/images/dates.jpg",
-            category: "Dried Fruits",
-          },
-          {
-            id: 8,
-            name: "Apricots",
-            price: 700,
-            description: "Premium dried apricots",
-            image_url: "/images/apricots.jpg",
-            category: "Dried Fruits",
-          },
-        
-          // Mixes
-          {
-            id: 9,
-            name: "Trail Mix",
-            price: 800,
-            description: "Healthy mix of nuts and dried fruits",
-            image_url: "/images/trail-mix.jpg",
-            category: "Mixes",
-          },
-          {
-            id: 10,
-            name: "Energy Mix",
-            price: 900,
-            description: "Perfect snack with nuts, seeds, and dried fruits",
-            image_url: "/images/energy-mix.jpg",
-            category: "Mixes",
-          },
-        ];
-
+        // Replace this API URL with your milk products API
+        const res = await fetch("https://usefulapis-production.up.railway.app/api/get-milk-products");
+        const data = await res.json();
         setProducts(data);
       } catch (err) {
         console.error(err);
@@ -230,11 +134,7 @@ const ShopOnline = () => {
   const handleAddToCart = (item) => {
     setCart((prev) => {
       const exist = prev.find((i) => i.id === item.id);
-      if (exist) {
-        return prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
+      if (exist) return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
       return [...prev, { ...item, quantity: 1 }];
     });
     setClickedItemId(item.id);
@@ -243,16 +143,12 @@ const ShopOnline = () => {
 
   const handleRemoveFromCart = (id) => {
     setCart((prev) =>
-      prev
-        .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-        )
-        .filter((item) => item.quantity > 0)
+      prev.map((item) => item.id === id ? { ...item, quantity: item.quantity - 1 } : item)
+          .filter((item) => item.quantity > 0)
     );
   };
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
   const groupedProducts = products.reduce((acc, item) => {
     if (!acc[item.category]) acc[item.category] = [];
     acc[item.category].push(item);
@@ -260,57 +156,37 @@ const ShopOnline = () => {
   }, {});
 
   const handleCheckout = async () => {
-  if (!cart.length) {
-    alert("Cart is empty");
-    return;
-  }
+    if (!cart.length) return alert("Cart is empty");
+    if (!phone) return alert("Enter your phone number");
 
-  if (!phone) {
-    alert("Enter your phone number");
-    return;
-  }
+    const summary = cart.map((item, i) => `${i + 1}. ${item.name} x${item.quantity} — Rs.${item.price * item.quantity}`).join("\n");
 
-  const summary = cart
-    .map((item, i) => `${i + 1}. ${item.name} x${item.quantity} — Rs.${item.price * item.quantity}`)
-    .join("\n");
+    const confirmed = window.confirm(`Order Summary:\n${summary}\nTotal: Rs.${total}\nPhone: ${phone}\nProceed?`);
+    if (!confirmed) return;
 
-  const confirmed = window.confirm(
-    `Order Summary:\n${summary}\nTotal: Rs.${total}\nPhone: ${phone}\nProceed?`
-  );
+    try {
+      const payload = { items: cart, total, phone, timestamp: new Date().toISOString() };
+      const res = await fetch("https://usefulapis-production.up.railway.app/api/send-milk-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-  if (!confirmed) return;
+      if (!res.ok) throw new Error("Failed to send order");
 
-  try {
-    const payload = {
-      items: cart,
-      total,
-      phone,
-      timestamp: new Date().toISOString()  // ✅ Add timestamp
-    };
-
-    const res = await fetch("https://usefulapis-production.up.railway.app/api/send-dry-fruit-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) throw new Error("Failed to send order");
-
-    alert("Order placed successfully! You will receive an SMS shortly.");
-    setCart([]);
-    setPhone("");
-    setOrderPlaced(true);
-  } catch (err) {
-    console.error("Order submission error:", err);
-    alert("Error sending order. Please try again.");
-  }
-};
-
-
+      alert("Order placed successfully! You will receive an SMS shortly.");
+      setCart([]);
+      setPhone("");
+      setOrderPlaced(true);
+    } catch (err) {
+      console.error("Order submission error:", err);
+      alert("Error sending order. Please try again.");
+    }
+  };
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Royal Dry Fruits Store</h1>
+      <h1 style={styles.title}>Hajvery Milk Shop</h1>
 
       {Object.entries(groupedProducts).map(([category, items]) => (
         <div key={category} style={styles.menuGroup}>
@@ -320,32 +196,16 @@ const ShopOnline = () => {
               <div
                 key={item.id}
                 style={styles.menuCard}
-                onMouseEnter={(e) =>
-                  Object.assign(e.currentTarget.style, styles.menuCardHover)
-                }
-                onMouseLeave={(e) =>
-                  Object.assign(e.currentTarget.style, { transform: "none" })
-                }
+                onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.menuCardHover)}
+                onMouseLeave={(e) => Object.assign(e.currentTarget.style, { transform: "none" })}
               >
-                <img
-                  src={item.image_url}
-                  alt={item.name}
-                  style={styles.menuImage}
-                />
+                <img src={item.image_url} alt={item.name} style={styles.menuImage} />
                 <h4>{item.name}</h4>
                 <p style={{ color: "#7f8c8d" }}>{item.description}</p>
-                <p style={{ fontWeight: "bold", margin: "0.5rem 0" }}>
-                  Rs. {item.price}
-                </p>
+                <p style={{ fontWeight: "bold", margin: "0.5rem 0" }}>Rs. {item.price}</p>
                 <button
                   onClick={() => handleAddToCart(item)}
-                  style={{
-                    ...styles.addButton,
-                    backgroundColor:
-                      clickedItemId === item.id
-                        ? "#4CAF50"
-                        : styles.addButton.backgroundColor,
-                  }}
+                  style={{ ...styles.addButton, backgroundColor: clickedItemId === item.id ? "#4CAF50" : styles.addButton.backgroundColor }}
                 >
                   Add to Cart
                 </button>
@@ -357,30 +217,19 @@ const ShopOnline = () => {
 
       <h2 style={styles.sectionHeader}>Your Cart</h2>
       {cart.length === 0 ? (
-        <p style={{ textAlign: "center", color: "#7f8c8d" }}>
-          Your cart is empty.
-        </p>
+        <p style={{ textAlign: "center", color: "#7f8c8d" }}>Your cart is empty.</p>
       ) : (
         <div style={styles.cartSection}>
           <ul style={styles.cartList}>
             {cart.map((item) => (
               <li key={item.id} style={styles.cartItem}>
-                <span>
-                  {item.name} x{item.quantity} — Rs.{item.price * item.quantity}
-                </span>
-                <button
-                  onClick={() => handleRemoveFromCart(item.id)}
-                  style={styles.removeButton}
-                >
-                  Remove
-                </button>
+                <span>{item.name} x{item.quantity} — Rs.{item.price * item.quantity}</span>
+                <button onClick={() => handleRemoveFromCart(item.id)} style={styles.removeButton}>Remove</button>
               </li>
             ))}
           </ul>
           <div>
-            <label htmlFor="phone" style={{ fontWeight: "bold" }}>
-              Phone / Address:
-            </label>
+            <label htmlFor="phone" style={{ fontWeight: "bold" }}>Phone / Address:</label>
             <input
               type="tel"
               id="phone"
@@ -399,11 +248,7 @@ const ShopOnline = () => {
           <button
             onClick={handleCheckout}
             disabled={!phone}
-            style={{
-              ...styles.checkoutButton,
-              opacity: phone ? 1 : 0.5,
-              cursor: phone ? "pointer" : "not-allowed",
-            }}
+            style={{ ...styles.checkoutButton, opacity: phone ? 1 : 0.5, cursor: phone ? "pointer" : "not-allowed" }}
           >
             Checkout
           </button>
@@ -411,9 +256,7 @@ const ShopOnline = () => {
       )}
 
       {orderPlaced && (
-        <div style={{ textAlign: "center", marginTop: "1.5rem", color: "#27ae60" }}>
-          🎉 Order placed successfully!
-        </div>
+        <div style={{ textAlign: "center", marginTop: "1.5rem", color: "#27ae60" }}>🎉 Order placed successfully!</div>
       )}
     </div>
   );
